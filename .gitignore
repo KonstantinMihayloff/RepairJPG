@@ -43,6 +43,9 @@
 # JPG files
 *.jpg
 
+# JSON Files
+*.json
+
 # Visual Studio files
 *.suo
 *.vsidx
@@ -51,3 +54,7 @@
 *.db-wal
 *.opendb
 *.ipch
+*.enc
+*.recipe
+*.log
+*.tlog
