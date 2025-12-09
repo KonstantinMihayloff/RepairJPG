@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="RepairJPG/RepairJPG.vcxproj" />
+  <Project Path="RepairJPG/RepairJPG.vcxproj" Id="06c4e87e-e70e-4460-a35d-52c39e5c6a0b" />
 </Solution>

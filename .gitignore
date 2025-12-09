@@ -58,3 +58,5 @@
 *.recipe
 *.log
 *.tlog
+
+*.idb

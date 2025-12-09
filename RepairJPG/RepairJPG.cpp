@@ -1,33 +1,19 @@
+// std library headers used: <iostream>, <fstream>, <vector>, <filesystem>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <filesystem>
 
+// Repair JPG headers
+#include "Utils.hpp"
+#include "JPGManager.hpp"
 
-void printHex(const std::vector<unsigned char>& buffer) {
-    for (size_t i = 0; i < buffer.size(); ++i) {
-        std::cout << std::hex << std::setw(2) << std::setfill('0')
-            << static_cast<int>(buffer[i]) << " ";
-
-        if ((i + 1) % 16 == 0)
-            std::cout << "\n";
-    }
-    std::cout << "The binary code of the file is:\n" << std::endl;
-    std::cout << std::dec << std::endl; // revenir en base 10
-}
-
-bool readWord(std::ifstream& in, unsigned short& out) {
-    unsigned char a, b;
-    if (!in.read(reinterpret_cast<char*>(&a), 1)) return false;
-    if (!in.read(reinterpret_cast<char*>(&b), 1)) return false;
-    out = (a << 8) | b;
-    return true;
-}
+// Constants
+//const std::string inputFile = "IMG_20180601_211229.jpg";
+const std::string inputFile = ".\\..\\Test.jpg";
+const std::string outputFile = "Fixed_IMG_20180601_211229.jpg";
 
 int main() {
-    const std::string inputFile = "IMG_20180601_211229.jpg";
-    const std::string outputFile = "Fixed_IMG_20180601_211229.jpg";
-
     // Offset où insérer FF D9
     // Exemple : 500000 (à adapter)
     std::streamoff insertPos = 500008;  // Exemple
@@ -35,22 +21,17 @@ int main() {
     unsigned short marker;
     unsigned short length;
 
-    std::ifstream in(inputFile, std::ios::binary);
-    if (!in) {
-        std::cerr << "Erreur : impossible d’ouvrir " << inputFile << std::endl;
+    JPGManager* manager = new JPGManager();
+
+    if (manager->loadImage(inputFile) != ErrorCode::SUCCESS_TO_LOAD) {
+        std::cerr << "Erreur : impossible de charger l’image." << std::endl;
         return 1;
-    }
+	}
 
-    // Lire SOI = FF D8
-    readWord(in, marker);
-    if (marker != 0xFFD8) {
-        std::cerr << "Pas un JPEG valide." << std::endl;
-        return 1;
-    }
+    manager->analyzeMarkers();
+    
 
-    std::cout << "SOI trouvé." << std::endl;
-
-    std::streamoff lastGoodPos = 2; // après FFD8
+#ifdef USE_OLD_METHOD
 
     while (true) {
         if (!readWord(in, marker)) break;
@@ -119,6 +100,8 @@ int main() {
     out.close();
 
     std::cout << "Fichier tronqué + FF D9 ajouté : " << outputFile << std::endl;
+
+#endif // !USE_OLD_METHOD
 
     return 0;
 }
