@@ -39,3 +39,15 @@
 
 # debug information files
 *.dwo
+
+# JPG files
+*.jpg
+
+# Visual Studio files
+*.suo
+*.vsidx
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.ipch
